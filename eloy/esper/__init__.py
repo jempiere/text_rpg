@@ -19,8 +19,36 @@ from weakref import WeakMethod as _WeakMethod
 
 from itertools import count as _count
 
+__all__ = [
+    "switch_world",
+    "delete_world",
+    "list_worlds",
+    "create_entity",
+    "delete_entity",
+    "entity_exists",
+    "add_processor",
+    "remove_processor",
+    "component_for_entity",
+    "components_for_entity",
+    "add_component",
+    "remove_component",
+    "get_component",
+    "get_components",
+    "has_component",
+    "has_components",
+    "try_component",
+    "try_components",
+    "process",
+    "timed_process",
+    "clear_database",
+    "clear_cache",
+    "clear_dead_entities",
+    "dispatch_event",
+    "set_handler",
+    "remove_handler",
+]
 
-version = '3.0'
+version = "3.0"
 
 
 ###################
@@ -45,6 +73,7 @@ def dispatch_event(name: str, *args: _Any) -> None:
 
 def _make_callback(name: str) -> _Callable[[_Any], None]:
     """Create an internal callback to remove dead handlers."""
+
     def callback(weak_method: _Any) -> None:
         event_registry[name].remove(weak_method)
         if not event_registry[name]:
@@ -90,10 +119,10 @@ def remove_handler(name: str, func: _Callable[..., None]) -> None:
 ###################
 
 
-_C = _TypeVar('_C')
-_C2 = _TypeVar('_C2')
-_C3 = _TypeVar('_C3')
-_C4 = _TypeVar('_C4')
+_C = _TypeVar("_C")
+_C2 = _TypeVar("_C2")
+_C3 = _TypeVar("_C3")
+_C4 = _TypeVar("_C4")
 
 
 class Processor:
@@ -127,7 +156,6 @@ class Processor:
         raise NotImplementedError
 
 
-
 ###################
 #   ECS functions
 ###################
@@ -144,17 +172,20 @@ process_times: _Dict[str, int] = {}
 event_registry: _Dict[str, _Any] = {}
 
 # {context_name: (entity_count, components, entities, dead_entities, comp_cache, comps_cache, processors, process_times, event_registry)}
-_context_map: _Dict[str, _Tuple[
-    "_count[int]",
-    _Dict[_Type[_Any], _Set[_Any]],
-    _Dict[int, _Dict[_Type[_Any], _Any]],
-    _Set[int],
-    _Dict[_Type[_Any], _List[_Any]],
-    _Dict[_Tuple[_Type[_Any], ...], _List[_Any]],
-    _List[Processor],
-    _Dict[str, int],
-    _Dict[str, _Any]
-]] = {"default": (_entity_count, {}, {}, set(), {}, {}, [], {}, {})}
+_context_map: _Dict[
+    str,
+    _Tuple[
+        "_count[int]",
+        _Dict[_Type[_Any], _Set[_Any]],
+        _Dict[int, _Dict[_Type[_Any], _Any]],
+        _Set[int],
+        _Dict[_Type[_Any], _List[_Any]],
+        _Dict[_Tuple[_Type[_Any], ...], _List[_Any]],
+        _List[Processor],
+        _Dict[str, int],
+        _Dict[str, _Any],
+    ],
+] = {"default": (_entity_count, {}, {}, set(), {}, {}, [], {}, {})}
 
 
 def clear_cache() -> None:
@@ -240,7 +271,6 @@ def create_entity(*components: _C) -> int:
         _entities[entity] = {}
 
     for component_instance in components:
-
         component_type = type(component_instance)
 
         if component_type not in _components:
@@ -325,7 +355,9 @@ def has_components(entity: int, *component_types: _Type[_C]) -> bool:
     return all(comp_type in _entities[entity] for comp_type in component_types)
 
 
-def add_component(entity: int, component_instance: _C, type_alias: _Optional[_Type[_C]] = None) -> None:
+def add_component(
+    entity: int, component_instance: _C, type_alias: _Optional[_Type[_C]] = None
+) -> None:
     """Add a new Component instance to an Entity.
 
     Add a Component instance to an Entiy. If a Component of the same type
@@ -394,22 +426,29 @@ def get_component(component_type: _Type[_C]) -> _List[_Tuple[int, _C]]:
 
 
 @_overload
-def get_components(__c1: _Type[_C], __c2: _Type[_C2]) -> _List[_Tuple[int, _Tuple[_C, _C2]]]:
+def get_components(
+    __c1: _Type[_C], __c2: _Type[_C2]
+) -> _List[_Tuple[int, _Tuple[_C, _C2]]]:
     ...
 
 
 @_overload
-def get_components(__c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3]) -> _List[_Tuple[int, _Tuple[_C, _C2, _C3]]]:
+def get_components(
+    __c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3]
+) -> _List[_Tuple[int, _Tuple[_C, _C2, _C3]]]:
     ...
 
 
 @_overload
-def get_components(__c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3], __c4: _Type[_C4]) -> _List[
-    _Tuple[int, _Tuple[_C, _C2, _C3, _C4]]]:
+def get_components(
+    __c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3], __c4: _Type[_C4]
+) -> _List[_Tuple[int, _Tuple[_C, _C2, _C3, _C4]]]:
     ...
 
 
-def get_components(*component_types: _Type[_Any]) -> _Iterable[_Tuple[int, _Tuple[_Any, ...]]]:
+def get_components(
+    *component_types: _Type[_Any],
+) -> _Iterable[_Tuple[int, _Tuple[_Any, ...]]]:
     """Get an iterator for Entity and multiple Component sets."""
     try:
         return _get_components_cache[component_types]
@@ -438,16 +477,22 @@ def try_components(entity: int, __c1: _Type[_C], __c2: _Type[_C2]) -> _Tuple[_C,
 
 
 @_overload
-def try_components(entity: int, __c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3]) -> _Tuple[_C, _C2, _C3]:
+def try_components(
+    entity: int, __c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3]
+) -> _Tuple[_C, _C2, _C3]:
     ...
 
 
 @_overload
-def try_components(entity: int, __c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3], __c4: _Type[_C4]) -> _Tuple[_C, _C2, _C3, _C4]:
+def try_components(
+    entity: int, __c1: _Type[_C], __c2: _Type[_C2], __c3: _Type[_C3], __c4: _Type[_C4]
+) -> _Tuple[_C, _C2, _C3, _C4]:
     ...
 
 
-def try_components(entity: int, *component_types: _Type[_C]) -> _Optional[_Tuple[_C, ...]]:
+def try_components(
+    entity: int, *component_types: _Type[_C]
+) -> _Optional[_Tuple[_C, ...]]:
     """Try to get a multiple component types for an Entity.
 
     This function will return the requested Components if they exist,
@@ -472,7 +517,6 @@ def clear_dead_entities() -> None:
     # `delete_entity` function. If that function is changed, those changes should
     # be duplicated here as well.
     for entity in _dead_entities:
-
         for component_type in _entities[entity]:
             _components[component_type].discard(entity)
 
@@ -563,6 +607,15 @@ def switch_world(name: str) -> None:
     global process_times
     global event_registry
 
-    (_entity_count, _components, _entities, _dead_entities, _get_component_cache,
-     _get_components_cache, _processors, process_times, event_registry) = _context_map[name]
+    (
+        _entity_count,
+        _components,
+        _entities,
+        _dead_entities,
+        _get_component_cache,
+        _get_components_cache,
+        _processors,
+        process_times,
+        event_registry,
+    ) = _context_map[name]
     _current_context = name
