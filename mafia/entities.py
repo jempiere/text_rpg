@@ -1,4 +1,5 @@
-import eloy
+import sys
+import sys.path.append()
 from components import *
 
 def createPerson(Role = None):
