@@ -24,7 +24,6 @@ def killPlayer(player): #set a single player's Alive to false, if their Saved is
         aliveComponent.isAlive = False
         return True
     else:
-        savedComponent.isSaved = False
         return False
 
 def savePlayer(player): #set Saved to True
@@ -37,3 +36,9 @@ def investigatePlayer(player):
         return True
     else:
         return False
+
+def resetSavedPlayer(allPlayers):
+    for player in allPlayers:
+        savedComponent = eloy.component_for_entity(player, Saved)
+        savedComponent.isSaved = False
+    return True
