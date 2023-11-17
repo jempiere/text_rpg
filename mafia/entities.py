@@ -1,9 +1,10 @@
-from ../eloy import esper
+import eloy
 from components important *
 
-def createPerson():
+def createPerson(Role):
     person = esper.create_entity()
     esper.add_component(person, isAlive)
+    esper.add_component(person, role(Role)
     return person
 #create a person and make them living
 
