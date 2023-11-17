@@ -1,27 +1,32 @@
-from eloy import *
+from text_rpg import eloy
 import importlib
 import random
 import entities as ent
+import components as c
 
-eloy = importlib.import_module('eloy')
+#eloy = importlib.import_module('eloy')
 
-def AssignPlayers():
-    players = [0,1,2,3]
-    for p in players:
+def createPlayers():
+    users = [0,1,2,3]
+    players = []
+    for i in range(len(users)):
         v = random.randint(0,4)
         if v == 0:
             #player is mafia
-            p = ent.createPerson(eloy.get_component(Mafia))
+            p = ent.createPerson(eloy.get_component(c.Mafia))
             ...
         elif v == 1:
             #player is detective
+            p = ent.createPerson(eloy.get_component(c.Detective))
             ...
         elif v == 2:
             #player is angel
+            p = ent.createPerson(eloy.get_component(c.Angel))
             ...
         elif v == 3:
             #player has no role
             ...
+        players.append(p)
 
 def changePhase(state=globalState): #increment the phase
     if eloy.has_component(state, morningPhase):
@@ -41,33 +46,33 @@ def changePhase(state=globalState): #increment the phase
         eloy.add_component(state, morningPhase)
 
 def killPlayer(player): #set a single player's Alive to false, if their Saved is false.
-    savedComponent = eloy.component_for_entity(player, Saved)
+    savedComponent = eloy.component_for_entity(player, c.Saved)
     if savedComponent.isSaved == False:
-        aliveComponent = eloy.component_for_entity(player, Alive)
+        aliveComponent = eloy.component_for_entity(player, c.Alive)
         aliveComponent.isAlive = False
         return True
     else:
         return False
 
 def savePlayer(player): #set Saved to True
-    person = eloy.component_for_entity(player, Saved)
+    person = eloy.component_for_entity(player, c.Saved)
     person.isSaved = True
     return True
 
 def investigatePlayer(player):
-    if eloy.has_component(player, mafia):
+    if eloy.has_component(player, c.Mafia):
         return True
     else:
         return False
 
 def resetSavedPlayer(allPlayers): #reset all players Saved component.
     for player in allPlayers:
-        savedComponent = eloy.component_for_entity(player, Saved)
+        savedComponent = eloy.component_for_entity(player, c.Saved)
         savedComponent.isSaved = False
     return True
 
 def countVotes(narrator): #count all votes in the response dictionary.
-    votesComponent = eloy.component_for_entity(narrator, Votes)
+    votesComponent = eloy.component_for_entity(narrator, c.Votes)
     greatest = 0
     greatestKey = ""
     for vote in votesComponent.votes:

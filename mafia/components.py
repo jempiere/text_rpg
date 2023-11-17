@@ -1,4 +1,4 @@
-from ../eloy import *
+from text_rpg import eloy
 from dataclasses import dataclass as component
 
 @component
