@@ -3,28 +3,26 @@ from dataclasses import dataclass
 import curses
 import threading
 
-# stdscr = curses.initscr()
+
+@dataclass
+class Renderable:
+    visual: str
 
 
-# @dataclass
-# class Renderable:
-#     visual: str
+@dataclass
+class Region:
+    identifier: str
+    height: int
+    width: int
+    corner: tuple
+    layer: int
+    renderable: int
 
 
-# @dataclass
-# class Region:
-#     identifier: str
-#     height: int
-#     width: int
-#     corner: tuple
-#     layer: int
-#     renderable: int
-
-
-# def render():
-#     for region in esper.get_component(Region):
-#         renderable = esper.component_for_entity(region.renderable, Renderable)
-#         # TODO: Render stuff
+def render():
+    for region in esper.get_component(Region):
+        renderable = esper.component_for_entity(region.renderable, Renderable)
+        # TODO: Render stuff
 
 
 def main(stdscr):
