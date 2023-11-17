@@ -6,11 +6,31 @@ import components as c
 
 #eloy = importlib.import_module('eloy')
 
-def createPlayers():
+def setRules():
+    users = [0,1,2,3] # PLACEHOLDER
+    if len(users) < 4:
+        ...
+    elif 4 <= len(users) <= 6:
+        mafia_count = 1
+        detective_count = 1
+    elif 7 <= len(users) <= 11:
+        mafia_count = 2
+        detective_count = 1
+    elif 12 <= len(users) <= 15:
+        mafia_count = 3
+        detective_count = 2
+    return (mafia_count, detective_count)
+
+def createPlayers(roleCounts):
+    mCount = 0
+    dCount = 0
     users = [0,1,2,3]
     players = []
     for i in range(len(users)):
-        v = random.randint(0,4)
+        isValid = False
+        while not isValid:
+            v = random.randint(0,4)
+            
         if v == 0:
             #player is mafia
             p = ent.createPerson(eloy.get_component(c.Mafia))
@@ -27,6 +47,7 @@ def createPlayers():
             #player has no role
             ...
         players.append(p)
+    return players
 
 def changePhase(state=globalState): #increment the phase
     if eloy.has_component(state, morningPhase):
