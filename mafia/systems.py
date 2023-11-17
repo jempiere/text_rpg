@@ -65,3 +65,7 @@ def resetSavedPlayer(allPlayers):
         savedComponent = eloy.component_for_entity(player, Saved)
         savedComponent.isSaved = False
     return True
+
+def countVotes(narrator):
+    votesComponent = eloy.component_for_entity(narrator, Votes)
+    greatest = 0
