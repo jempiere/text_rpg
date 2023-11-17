@@ -60,12 +60,25 @@ def investigatePlayer(player):
     else:
         return False
 
-def resetSavedPlayer(allPlayers):
+def resetSavedPlayer(allPlayers): #reset all players Saved component.
     for player in allPlayers:
         savedComponent = eloy.component_for_entity(player, Saved)
         savedComponent.isSaved = False
     return True
 
-def countVotes(narrator):
+def countVotes(narrator): #count all votes in the response dictionary.
     votesComponent = eloy.component_for_entity(narrator, Votes)
     greatest = 0
+    greatestKey = ""
+    for vote in votesComponent.votes:
+        if votesComponent.votes[vote] > greatest:
+            greatest = votesComponent.votes[vote]
+            greatestKey = vote
+    return (greatest, greatestKey)
+
+def generateNarratorDict(narrator, allPlayers):
+    dictComponent = eloy.component_for_entity(narrator, Votes)
+    narratorDict = dictComponent.votes
+    for player in allPlayers:
+        narratorDict[player] = 0
+    return True
