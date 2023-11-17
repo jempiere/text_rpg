@@ -2,6 +2,7 @@
 # It schedules our own code to run at the relevant times.
 
 # TODO: detect dropped hosts
+# TODO: call esper.process at some point. required for various esper methods.
 
 import esper
 
