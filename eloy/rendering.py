@@ -40,6 +40,21 @@ class P:
 proxy = P()
 
 
+@dataclass
+class Renderable:
+    visual: str
+
+
+@dataclass
+class Region:
+    identifier: str
+    height: int
+    width: int
+    corner: tuple
+    layer: int
+    renderable: int
+
+
 def pprint(*a,**kw) -> None:
     output = io.StringIO()
     print(*a,**kw,file=output)
