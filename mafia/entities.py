@@ -1,5 +1,4 @@
-import sys
-import sys.path.append()
+from text_rpg import eloy
 from components import *
 
 def createPerson(Role = None):
