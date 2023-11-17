@@ -46,31 +46,31 @@ def changePhase(state=globalState): #increment the phase
         eloy.add_component(state, morningPhase)
 
 def killPlayer(player): #set a single player's Alive to false, if their Saved is false.
-    savedComponent = eloy.component_for_entity(player, Saved)
+    savedComponent = eloy.component_for_entity(player, c.Saved)
     if savedComponent.isSaved == False:
-        aliveComponent = eloy.component_for_entity(player, Alive)
+        aliveComponent = eloy.component_for_entity(player, c.Alive)
         aliveComponent.isAlive = False
         return True
     else:
         return False
 
 def savePlayer(player): #set Saved to True
-    person = eloy.component_for_entity(player, Saved)
+    person = eloy.component_for_entity(player, c.Saved)
     person.isSaved = True
     return True
 
 def investigatePlayer(player):
-    if eloy.has_component(player, mafia):
+    if eloy.has_component(player, c.Mafia):
         return True
     else:
         return False
 
 def resetSavedPlayer(allPlayers):
     for player in allPlayers:
-        savedComponent = eloy.component_for_entity(player, Saved)
+        savedComponent = eloy.component_for_entity(player, c.Saved)
         savedComponent.isSaved = False
     return True
 
 def countVotes(narrator):
-    votesComponent = eloy.component_for_entity(narrator, Votes)
+    votesComponent = eloy.component_for_entity(narrator, c.Votes)
     greatest = 0
