@@ -16,12 +16,16 @@ class angel:
 
 
 @component
-class Alive:
+class Alive:                # Attribute for every player
     isAlive: bool = True
 
 @component
-class Saved:
+class Saved:                # Attribute for every player
     isSaved: bool = False
+
+@component
+class Votes:                # Part of Narrator exclusively
+    votes: dict = {} 
 
 
     
