@@ -14,7 +14,7 @@ def createGameState():
     state = eloy.create_entity()
     eloy.add_component(state, isEnded)
     eloy.add_component(state, phase)
-    return person
+    return state
 #create the game state and keep it running with the isEnded component, and the phase component.
 
 def createNarrator():

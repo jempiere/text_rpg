@@ -13,6 +13,9 @@ class Detective:
 class Angel:
     angel: bool = True
 
+@component
+class NumPlayers:
+    numPlayers: int = 0
 
 
 @component
@@ -26,6 +29,10 @@ class Saved:                # Attribute for every player
 @component
 class Votes:                # Part of Narrator exclusively
     votes: dict = {}
+
+@component
+class Ballot:
+    ballot: str = ""
 
 @component
 class Input:                # Everyone has this- used to check if they have voted or not.
