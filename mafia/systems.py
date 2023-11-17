@@ -82,7 +82,7 @@ def countVotes(narrator): #count all votes in the response dictionary.
     return (greatest, greatestKey)
 
 def generateNarratorDict(narrator, allPlayers):
-    dictComponent = eloy.component_for_entity(narrator, Votes)
+    dictComponent = eloy.component_for_entity(narrator, c.Votes)
     narratorDict = dictComponent.votes
     for player in allPlayers:
         narratorDict[player] = 0
