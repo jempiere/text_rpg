@@ -49,7 +49,7 @@ def createPlayers(roleCounts):
         players.append(p)
     return players
 
-def changePhase(state=globalState): #increment the phase
+def changePhase(state): #increment the phase
     if eloy.has_component(state, morningPhase):
         eloy.remove_component(state, morningPhase)
         eloy.add_component(state, discussionPhase)
@@ -92,7 +92,7 @@ def resetSavedPlayer(allPlayers): #reset all players Saved component.
         savedComponent.isSaved = False
     return True
 
-def countVotes(narrator): #count all votes in the response dictionary.
+def mostVotes(narrator): #count all votes in the response dictionary.
     votesComponent = eloy.component_for_entity(narrator, c.Votes)
     greatest = 0
     greatestKey = ""
@@ -102,9 +102,34 @@ def countVotes(narrator): #count all votes in the response dictionary.
             greatestKey = vote
     return (greatest, greatestKey)
 
-def generateNarratorDict(narrator, allPlayers):
+def generateNarratorDict(narrator, allPlayers): #create the narrator's dictionary of players at the beginning of the game.
     dictComponent = eloy.component_for_entity(narrator, c.Votes)
     narratorDict = dictComponent.votes
     for player in allPlayers:
         narratorDict[player] = 0
     return True
+
+def getVote(narrator, choice): #add a player's vote to the narrator's dictionary
+    dictComponent = eloy.component_for_entity(narrator, c.Votes)
+    narratorDict = dictComponent.votes
+    narratorDict[choice] += 1
+    return True
+
+def tallyVotes(narrator, allPlayers): #call getVote() over and over to move all votes from the players to the narrator's dictionary of responses.
+    for player in allPlayers:
+        playerChoice = eloy.component_for_entity(player, c.Ballot)
+        playerChoice = playerChoice.ballot
+        getVote(narrator, choice)
+    return True
+
+def removeVote(player):
+    playerChoice = eloy.component_for_entity(player, c.Ballot)
+    playerChoice = playerChoice.ballot
+    playerChoice = ""
+    return True
+
+def removeVotes(allPlayers):
+    for player in allPlayers:
+        removeVote(player)
+    return True
+
