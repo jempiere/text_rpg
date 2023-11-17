@@ -1,5 +1,5 @@
 import eloy
-from components important *
+from components import *
 
 def createPerson(Role = None):
     person = esper.create_entity()
