@@ -1,10 +1,12 @@
 import eloy
 from components important *
 
-def createPerson(Role):
+def createPerson(Role = None):
     person = esper.create_entity()
+    if Role != None:
+        esper.add_component(person, Role)
     esper.add_component(person, isAlive)
-    esper.add_component(person, role(Role)
+    esper.add_component(person, isSaved)
     return person
 #create a person and make them living
 
@@ -19,10 +21,5 @@ def createNarrator():
     narrator = esper.create_entity()
     esper.add_component(narrator, responseDict)
 #create the narrator and his dictionary of responses from the players.
-
-def createTimer():
-    timer = esper.create_entity()
-    esper.add_component(timer, clock)
-#create a timer entity for the discussion phase.
 
 

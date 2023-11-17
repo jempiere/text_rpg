@@ -3,15 +3,15 @@ from dataclasses import dataclass as component
 
 @component
 class mafia:
-    ...
+    mafia: bool = True
 
 @component
 class detective:
-    ...
+    detective: bool = True
 
 @component
 class angel:
-    ...
+    angel: bool = True
 
 
 
@@ -24,4 +24,4 @@ class Saved:
     isSaved: bool = False
 
 
-    
+
