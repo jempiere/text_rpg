@@ -20,14 +20,15 @@ def mafiaLoseCheck():
         if alive.isAlive == True:
             # If any mafia are still alive, return False.
             return False
+    mafiaLost = eloy.component_for_entity(world, c.MafiaLose)
+    mafiaLost.mafiaLose = True
+    return True
     # If we get here, there are no mafia alive.
     # Get the list of all entities with a MafiaLose component.
     # This should be exactly one, created in `main`, unless you game developers
     # have made a mistake.
     # Get the [0] item from the returned list.
-    ent, mafiaLose = eloy.get_component(c.MafiaLose)[0]
     # Now, the "game_state" entity will mark that the game is over.
-    mafiaLose.mafiaLose = True
 
 
 def setRules():
@@ -120,9 +121,11 @@ def inputPhaseOrchestrator():
         playerRoster = eloy.component_for_entity(world, c.Roster)
         mafiaVote = getMafiaVotes(narrator, playerRoster.roster)
         angelVote = getAngelVote(narrator, playerRoster.roster)
+        savePlayer(int(angelVote))
         detectiveVote = getDetectiveVote(narrator, playerRoster.roster)
+        investigatePlayer(detectiveVote)
         playerDeath = eloy.component_for_entity(narrator, c.RecentDeath)
-        playerDeath.recentDeath = mostVotes(narrator)
+        playerDeath.recentDeath = mafiaVote
         isDead = killPlayer(int(playerDeath.recentDeath))
         if not isDead:
             angel = eloy.component_for_entity(narrator, c.AngelSaved)
@@ -218,7 +221,7 @@ def tallyVotes(
     for player in roster:
         playerChoice = eloy.component_for_entity(player, c.Ballot)
         playerChoice = playerChoice.ballot
-        getVote(narrator, choice)
+        getVote(narrator, playerChoice)
     return True
 
 
@@ -233,3 +236,55 @@ def removeVotes(roster):
     for player in roster:
         removeVote(player)
     return True
+
+def gameOver():
+    players = eloy.component_for_entity(world, c.Roster).roster
+    if mafiaLoseCheck(roster) or mafiaWinCheck(roster):
+        game = eloy.component_for_entity(world, c.GameStatus)
+        game.gameOver = True
+    return
+
+def mafiaWinCheck(roster):
+    mAlive = 0
+    livingCount = 0
+    for p in roster:
+        alive = eloy.component_for_entity(p, c.Alive)
+        if alive.isAlive == True:
+            livingCount+=1
+            if p.has_component(c.Mafia):
+                mAlive+=1
+    if mAlive > livingCount // 2:
+        return True
+    else:
+        return False
+
+def getMafiaVote(
+    narrator, roster
+):  # call getVote() over and over to move all votes from the players to the narrator's dictionary of responses.
+    for player in roster:
+        if player.has_component(c.Mafia):
+            playerChoice = eloy.component_for_entity(player, c.Ballot)
+            playerChoice = playerChoice.ballot
+            return playerChoice
+
+def getAngelVote(
+    narrator, roster
+):  # call getVote() over and over to move all votes from the players to the narrator's dictionary of responses.
+    for player in roster:
+        if player.has_component(c.Angel):
+            playerChoice = eloy.component_for_entity(player, c.Ballot)
+            playerChoice = playerChoice.ballot
+            return playerChoice
+
+def getDetectiveVote(
+    narrator, roster
+):  # call getVote() over and over to move all votes from the players to the narrator's dictionary of responses.
+    for player in roster:
+        if player.has_component(c.Detective):
+            playerChoice = eloy.component_for_entity(player, c.Ballot)
+            playerChoice = playerChoice.ballot
+            return playerChoice
+
+def resetAngelSaved(narrator):
+    angelSaved = eloy.component_for_entity(narrator, c.AngelSaved)
+    angelSaved.angelSaved = False

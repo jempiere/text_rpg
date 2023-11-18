@@ -1,5 +1,5 @@
 from text_rpg import eloy
-from eloy import component 
+from eloy import component
 
 
 @component
