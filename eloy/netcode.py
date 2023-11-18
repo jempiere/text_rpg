@@ -19,5 +19,5 @@ while True:
         print(msg)
     for msg in libp2py.get_messages():
         print(msg)
-    libp2py.push_message("test")
+    libp2py.push_message(str(time.time()))
     time.sleep(0.3)

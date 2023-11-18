@@ -18,8 +18,8 @@ def mafiaLoseCheck():
         # or doesn't have an Alive component.
         alive = eloy.component_for_entity(ent, c.Alive)
         if alive.isAlive == True:
-            # If any mafia are still alive, do nothing.
-            return
+            # If any mafia are still alive, return False.
+            return False
     # If we get here, there are no mafia alive.
     # Get the list of all entities with a MafiaLose component.
     # This should be exactly one, created in `main`, unless you game developers
@@ -112,14 +112,45 @@ def nightPhaseOrchestrator():
             recentDeath = eloy.component_for_entity(narrator, c.RecentDeath) #check who recently died for the night summary
             narratorNightSummarize(narrator, recentDeath.recentDeath) #ASH MAKE THIS GUD
         roster = eloy.component_for_entity(gameState, c.Roster) # grab the roster to reset the saved player component for whichever entity had it for the round.
-        resetSavedPlayer(gameState, roster) # reset saved player
         changePhase(gameState) # switch the game phase
         return #yuh
 
 def inputPhaseOrchestrator():
+    for ent, narrator in eloy.get_component(c.Votes): #should run once just to grab the narrator.
+        playerRoster = eloy.component_for_entity(world, c.Roster)
+        mafiaVote = getMafiaVotes(narrator, playerRoster.roster)
+        angelVote = getAngelVote(narrator, playerRoster.roster)
+        detectiveVote = getDetectiveVote(narrator, playerRoster.roster)
+        playerDeath = eloy.component_for_entity(narrator, c.RecentDeath)
+        playerDeath.recentDeath = mostVotes(narrator)
+        isDead = killPlayer(int(playerDeath.recentDeath))
+        if not isDead:
+            angel = eloy.component_for_entity(narrator, c.AngelSaved)
+            angel.angelSaved = True
+        removeVotes(playerRoster)
+        changePhase(gameState)
+        return
+
+def morningPhaseOrchestrator():
+    for ent, gameState in eloy.get_component(c.MorningPhase): #should only grab the gamestate
+        for ent, narrator in eloy.get_component(c.Votes): #should only run once and grab the narrator.
+            recentDeath = eloy.component_for_entity(narrator, c.RecentDeath) #check who recently died for the night summary
+            narratorMorningSummarize(narrator, recentDeath.recentDeath) #ASH MAKE THIS GUD
+            resetAngelSaved(narrator)
+        roster = eloy.component_for_entity(gameState, c.Roster) # grab the roster to reset the saved player component for whichever entity had it for the round.
+        resetSavedPlayer(gameState, roster) # reset saved player
+        changePhase(gameState) # switch the game phase
 
 
-
+def votingPhaseOrchestrator():
+    for ent, narrator in eloy.get_component(c.Votes): #should run once just to grab the narrator.
+        playerRoster = eloy.component_for_entity(world, c.Roster)
+        tallyVotes(narrator, playerRoster.roster)
+        playerDeath = eloy.component_for_entity(narrator, c.RecentDeath)
+        playerDeath.recentDeath = mostVotes(narrator)
+        killPlayer(int(playerDeath.recentDeath))
+        removeVotes(playerRoster)
+        changePhase(gameState)
 
 def killPlayer(
     player,
@@ -161,7 +192,7 @@ def mostVotes(narrator):  # count all votes in the response dictionary.
         if votesComponent.votes[vote] > greatest:
             greatest = votesComponent.votes[vote]
             greatestKey = vote
-    return (greatest, greatestKey)
+    return greatestKey
 
 
 def generateNarratorDict(
@@ -182,9 +213,9 @@ def getVote(narrator, choice):  # add a player's vote to the narrator's dictiona
 
 
 def tallyVotes(
-    narrator, allPlayers
+    narrator, roster
 ):  # call getVote() over and over to move all votes from the players to the narrator's dictionary of responses.
-    for player in allPlayers:
+    for player in roster:
         playerChoice = eloy.component_for_entity(player, c.Ballot)
         playerChoice = playerChoice.ballot
         getVote(narrator, choice)
@@ -198,7 +229,7 @@ def removeVote(player):
     return True
 
 
-def removeVotes(allPlayers):
-    for player in allPlayers:
+def removeVotes(roster):
+    for player in roster:
         removeVote(player)
     return True

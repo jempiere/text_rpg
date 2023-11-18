@@ -1455,6 +1455,7 @@ dependencies = [
  "futures",
  "lazy_static",
  "libp2p",
+ "log",
  "pyo3",
  "ringbuffer",
  "tokio",

@@ -116,11 +116,11 @@ async fn start_network() -> Result<(), Box<dyn Error>> {
             //TODO: Make this less than 1000
             _ = tokio::time::sleep(Duration::from_millis(1000)) => {
                 let mut nw1 = NETWORKER.lock().unwrap();
-                let nw =nw1.as_mut().unwrap();
-                let mut outbound =nw.outbound.drain();
+                let nw = nw1.as_mut().unwrap();
+                let mut outbound = nw.outbound.drain();
                 while let Some(data) = outbound.next() {
                     if let Err(e) =  swarm.behaviour_mut().gossipsub.publish(topic.clone(), data.as_bytes()) {
-                        networker!().events.enqueue(format!("PublishError;{e:?}"));
+                        nw.events.enqueue(format!("PublishError;{e:?}"));
                     }
                 }
             }
