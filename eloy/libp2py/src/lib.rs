@@ -104,6 +104,14 @@ async fn start_network() -> Result<(), Box<dyn Error>> {
 
     loop {
         select! {
+            _ = tokio::time::sleep(Duration::from_millis(100)) => {
+                let mut nw1 = NETWORKER.lock().unwrap();
+                let nw =nw1.as_mut().unwrap();
+                let mut outbound =nw.outbound.drain();
+                while let Some(data) = outbound.next() {
+                    if let Ok(_) =  swarm.behaviour_mut().gossipsub.publish(topic.clone(), data.as_bytes()) {}
+                }
+            },
             event = swarm.select_next_some() => match event {
                 SwarmEvent::Behaviour(MyBehaviorEvent::Gossipsub(gossipsub::Event::Message {
                     propagation_source: peer_id,
