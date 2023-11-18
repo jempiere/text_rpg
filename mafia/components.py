@@ -56,27 +56,27 @@ class Input:  # Everyone has this- used to check if they have voted or not.
 
 
 @component
-class votingPhase:
+class VotingPhase:
     voting: bool = True  # phase where each user will mark who they are voting for.
 
 
 @component
-class discussionPhase:  # phase where each user will discuss
+class DiscussionPhase:  # phase where each user will discuss
     discussion: bool = True
 
 
 @component
-class nightPhase:  # phase where the narrator summarizes the day.
+class NightPhase:  # phase where the narrator summarizes the day.
     night: bool = True
 
 
 @component
-class morningPhase:  # phase where the narrator explains who died/lived.
+class MorningPhase:  # phase where the narrator explains who died/lived.
     morning: bool = True
 
 
 @component
-class inputPhase:  # phase where the mafia, detective, and angel give their input.
+class InputPhase:  # phase where the mafia, detective, and angel give their input.
     inputting: bool = True
 
 @component
