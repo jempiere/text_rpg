@@ -134,38 +134,21 @@ def main(screen):
     
     for f in flat:
         DATALOG.append(f)
-
-    # for pair in test_str():
-    #     colors = pair[1]
-    #     string = pair[0] #.split('\n')  #.split('\n')
-
-    #     lines = ['']
-    #     left_offset = 4
-    #     for char in string:
-    #         if char != '\n':
-    #             lines[-1] += char
-    #             continue
-    #         else:
-    #             lines.append(char)
-    #     if lines[0] == '':
-    #         lines.pop(0)
     prev = c_line
     prevlen = 0
     for f in flat:
         line, colors = f
-        DATALOG.append(colors)
+       # DATALOG.append(colors)
         if line == '\n':
             c_line += 1
             prev = c_line - 1
 
-        if line == '\n': screen.addstr(c_line,4,line,colors)
-        else: screen.addstr(c_line,4+prevlen,line,colors)
-
-        # if line == '\n':
-            # screen.addstr(c_line,4,line,curses.color_pair(colors))
-        # else:
-            # screen.addstr(c_line,4+prevlen,line,curses.color_pair(colors))
-
+        if line == '\n':
+            screen.addstr(c_line,4,line,colors)
+            prevlen = 0
+        else:
+            screen.addstr(c_line,4+prevlen,line,colors)
+            prevlen += len(line)
 
     screen.refresh()
     screen.getch()
