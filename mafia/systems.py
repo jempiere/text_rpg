@@ -18,8 +18,8 @@ def mafiaLoseCheck():
         # or doesn't have an Alive component.
         alive = eloy.component_for_entity(ent, c.Alive)
         if alive.isAlive == True:
-            # If any mafia are still alive, do nothing.
-            return
+            # If any mafia are still alive, return False.
+            return False
     # If we get here, there are no mafia alive.
     # Get the list of all entities with a MafiaLose component.
     # This should be exactly one, created in `main`, unless you game developers

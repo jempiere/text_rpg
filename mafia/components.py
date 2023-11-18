@@ -1,6 +1,16 @@
 from text_rpg import eloy
-from dataclasses import dataclass as component
+from eloy import component 
 
+
+@component
+class GameStatus:
+    gameOver: bool = False
+
+
+@component
+class Rules:
+    mafiaCount: int = 0
+    detectiveCount: int = 0
 
 # This component should only be implemented once. It should be attached to
 # a "game_state" entity or some similar entity which collects the global state
@@ -81,3 +91,8 @@ class Roster:
 @component
 class RecentDeath: #this saves to the narrator the most recent death. Important for orchestration processes.
     recentDeath: str = ""
+
+
+@component
+class AngelSaved:
+    angelSaved: bool = False
