@@ -1,11 +1,11 @@
 import eloy
 from mafia import systems as s
 from mafia import components as c
+#from mafia.components import MafiaLose
 
 # This next line is overly specific because I want to make a working
 # example but I don't want to mess with your organization. Feel free
 # to change it.
-from mafia.components import MafiaLose
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
     # whether the mafia have lost.
     # Other similar components would be added to track other pertinent
     # state information.
-    eloy.add_component(gameState, MafiaLose())
+    eloy.add_component(gameState, c.MafiaLose)
 
     # Hook in the "mafiaLoseCheck" function to run immediately after
     # the backend finishes processing any incoming network data.
