@@ -26,11 +26,6 @@ class Angel:
 
 
 @component
-class NumPlayers:
-    numPlayers: int = 0
-
-
-@component
 class Alive:  # Attribute for every player
     isAlive: bool = True
 
