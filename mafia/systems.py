@@ -3,6 +3,7 @@ import importlib
 import random
 import entities as ent
 import components as c
+from main import world
 
 
 # This system will be scheduled to run right after the backend
@@ -106,7 +107,17 @@ def changePhase(state):  # increment the phase
 
 
 def nightPhaseOrchestrator():
-    for ent, worldState in eloy.get_component(c.NightPhase):
+    for ent, gameState in eloy.get_component(c.NightPhase): #should only grab the gamestate
+        for ent, narrator in eloy.get_component(c.Votes): #should only run once and grab the narrator.
+            recentDeath = eloy.component_for_entity(narrator, c.RecentDeath) #check who recently died for the night summary
+            narratorNightSummarize(narrator, recentDeath.recentDeath) #ASH MAKE THIS GUD
+        roster = eloy.component_for_entity(gameState, c.Roster) # grab the roster to reset the saved player component for whichever entity had it for the round.
+        resetSavedPlayer(gameState, roster) # reset saved player
+        changePhase(gameState) # switch the game phase
+        return #yuh
+
+def inputPhaseOrchestrator():
+
 
 
 
@@ -135,8 +146,8 @@ def investigatePlayer(player):
         return False
 
 
-def resetSavedPlayer(allPlayers):  # reset all players Saved component.
-    for player in allPlayers:
+def resetSavedPlayer(roster):  # reset all players Saved component.
+    for player in roster:
         savedComponent = eloy.component_for_entity(player, c.Saved)
         savedComponent.isSaved = False
     return True
