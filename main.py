@@ -3,11 +3,9 @@ from mafia import systems as s
 from mafia import components as c
 #from mafia.components import MafiaLose
 
-# This next line is overly specific because I want to make a working
-# example but I don't want to mess with your organization. Feel free
-# to change it.
-
-
+world = 0
+    
+# main() is meant to only be run once to instantiate the game state for the duration of one game.
 def main():
     roleCounts = s.setRules() # Defines how many Mafia and Detectives
     players = s.createPlayers(roleCounts) # creates entities with roles assigned
@@ -17,15 +15,14 @@ def main():
     eloy.add_component(gameState, c.Roster)
     playerList = eloy.component_for_entity(gameState, c.Roster)
     playerList.roster = players
-    # The "game_state" requires a "MafiaLose" component to track
-    # whether the mafia have lost.
-    # Other similar components would be added to track other pertinent
-    # state information.
-    eloy.add_component(gameState, c.MafiaLose)
+    eloy.add_component(gameState, c.NightPhase)
+    eloy.add_component(gameState, c.MafiaLose)  # The "game_state" requires a "MafiaLose" component 
+    world = gameState
+                                                # to track whether the mafia have lost.
 
     # Hook in the "mafiaLoseCheck" function to run immediately after
     # the backend finishes processing any incoming network data.
-    eloy.set_handler(eloy.Stage.postNetwork, s.mafiaLoseCheck)
+    eloy.set_handler(eloy.Stage.postNetwork, s.mafiaLoseCheck()) # <---- THIS PROBABLY SHOULD GO IN SYSTEMS.PY
 
 
 main()
