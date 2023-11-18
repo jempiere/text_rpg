@@ -22,29 +22,42 @@ def setRules():
     return (mafia_count, detective_count)
 
 def createPlayers(roleCounts):
-    mCount = 0
-    dCount = 0
+    mCount = 0  #mafia counter
+    dCount = 0  #detective counter
+    aCount = 0  #angel counter
+    cCount = 0  #civilian counter
     users = [0,1,2,3]
     players = []
     for i in range(len(users)):
         isValid = False
         while not isValid:
             v = random.randint(0,4)
-            
+            if v == 0 and mCount < roleCounts[0]:
+                isValid = True
+            elif v == 1 and dCount < roleCounts[1]:
+                isValid = True
+            elif v == 2 and aCount < 1:
+                isValid = True
+            elif v == 3 and cCount < (len(users)-(roleCounts[0]+roleCounts[1])):
+                isValid = True
         if v == 0:
             #player is mafia
             p = ent.createPerson(eloy.get_component(c.Mafia))
+            mCount += 1
             ...
         elif v == 1:
             #player is detective
             p = ent.createPerson(eloy.get_component(c.Detective))
+            dCount += 1
             ...
         elif v == 2:
             #player is angel
             p = ent.createPerson(eloy.get_component(c.Angel))
+            aCount += 1
             ...
         elif v == 3:
             #player has no role
+            cCount += 1
             ...
         players.append(p)
     return players
