@@ -32,7 +32,14 @@ def createPlayers(roleCounts):
         isValid = False
         while not isValid:
             v = random.randint(0,4)
-
+            if v == 0 and mCount < roleCounts[0]:
+                isValid = True
+            elif v == 1 and dCount < roleCounts[1]:
+                isValid = True
+            elif v == 2 and aCount < 1:
+                isValid = True
+            elif v == 3 and cCount < (len(users)-(roleCounts[0]+roleCounts[1])):
+                isValid = True
         if v == 0:
             #player is mafia
             p = ent.createPerson(eloy.get_component(c.Mafia))
