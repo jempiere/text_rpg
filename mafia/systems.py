@@ -24,7 +24,7 @@ def mafiaLoseCheck():
     # This should be exactly one, created in `main`, unless you game developers
     # have made a mistake.
     # Get the [0] item from the returned list.
-    (ent, mafiaLose) = eloy.get_component(c.MafiaLose)[0]
+    ent, mafiaLose = eloy.get_component(c.MafiaLose)[0]
     # Now, the "game_state" entity will mark that the game is over.
     mafiaLose.mafiaLose = True
 
@@ -88,21 +88,26 @@ def createPlayers(roleCounts):
 
 
 def changePhase(state):  # increment the phase
-    if eloy.has_component(state, morningPhase):
-        eloy.remove_component(state, morningPhase)
-        eloy.add_component(state, discussionPhase)
-    elif eloy.has_component(state, discussionPhase):
-        eloy.remove_component(state, discussionPhase)
-        eloy.add_component(state, votingPhase)
-    elif eloy.has_component(state, votingPhase):
-        eloy.remove_component(state, votingPhase)
-        eloy.add_component(state, nightPhase)
-    elif eloy.has_component(state, nightPhase):
-        eloy.remove_component(state, nightPhase)
-        eloy.add_component(state, inputPhase)
-    elif eloy.has_component(state, inputPhase):
-        eloy.remove_component(state, inputPhase)
-        eloy.add_component(state, morningPhase)
+    if eloy.has_component(state, c.MorningPhase):
+        eloy.remove_component(state, c.MorningPhase)
+        eloy.add_component(state, c.DiscussionPhase)
+    elif eloy.has_component(state, c.DiscussionPhase):
+        eloy.remove_component(state, c.DiscussionPhase)
+        eloy.add_component(state, c.VotingPhase)
+    elif eloy.has_component(state, c.VotingPhase):
+        eloy.remove_component(state, c.VotingPhase)
+        eloy.add_component(state, c.NightPhase)
+    elif eloy.has_component(state, c.NightPhase):
+        eloy.remove_component(state, c.NightPhase)
+        eloy.add_component(state, c.InputPhase)
+    elif eloy.has_component(state, c.InputPhase):
+        eloy.remove_component(state, c.InputPhase)
+        eloy.add_component(state, c.MorningPhase)
+
+
+def nightPhaseOrchestrator():
+    for ent, worldState in eloy.get_component(c.NightPhase):
+
 
 
 def killPlayer(
