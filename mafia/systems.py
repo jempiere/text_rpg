@@ -46,8 +46,10 @@ def setRules():
 
 
 def createPlayers(roleCounts):
-    mCount = 0
-    dCount = 0
+    mCount = 0  # mafia counter
+    dCount = 0  # detective counter
+    aCount = 0  # angel counter
+    cCount = 0  # civilian counter
     users = [0, 1, 2, 3]
     players = []
     for i in range(len(users)):
@@ -58,17 +60,21 @@ def createPlayers(roleCounts):
         if v == 0:
             # player is mafia
             p = ent.createPerson(eloy.get_component(c.Mafia))
+            mCount += 1
             ...
         elif v == 1:
             # player is detective
             p = ent.createPerson(eloy.get_component(c.Detective))
+            dCount += 1
             ...
         elif v == 2:
             # player is angel
             p = ent.createPerson(eloy.get_component(c.Angel))
+            aCount += 1
             ...
         elif v == 3:
             # player has no role
+            cCount += 1
             ...
         players.append(p)
     return players
