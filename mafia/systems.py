@@ -118,20 +118,21 @@ def nightPhaseOrchestrator():
 
 def inputPhaseOrchestrator():
     for ent, narrator in eloy.get_component(c.Votes): #should run once just to grab the narrator.
-        playerRoster = eloy.component_for_entity(world, c.Roster)
-        mafiaVote = getMafiaVote(narrator, playerRoster.roster)
-        angelVote = getAngelVote(narrator, playerRoster.roster)
-        savePlayer(int(angelVote))
-        detectiveVote = getDetectiveVote(narrator, playerRoster.roster)
-        investigatePlayer(detectiveVote)
+        playerRoster = eloy.component_for_entity(world, c.Roster) #grab the world roster
+        mafiaVote = getMafiaVote(narrator, playerRoster.roster) #find the mafia's vote
+        angelVote = getAngelVote(narrator, playerRoster.roster) #find the angel's vote
+        savePlayer(int(angelVote)) #save the player based on the vote
+        detectiveVote = getDetectiveVote(narrator, playerRoster.roster) #find who the detective is investigating
+        investigatePlayer(detectiveVote) #investigateeeee
         playerDeath = eloy.component_for_entity(narrator, c.RecentDeath)
+        #capture the character who is dying with the RecentDeath component
         playerDeath.recentDeath = mafiaVote
-        isDead = killPlayer(int(playerDeath.recentDeath))
-        if not isDead:
+        isDead = killPlayer(int(playerDeath.recentDeath)) #killll
+        if not isDead: #if didn't kill, that means they were saved by the angel
             angel = eloy.component_for_entity(narrator, c.AngelSaved)
             angel.angelSaved = True
-        removeVotes(playerRoster)
-        changePhase(world)
+        removeVotes(playerRoster) #wipe the votes
+        changePhase(world) # change the phase
         return
 
 def morningPhaseOrchestrator():
