@@ -98,13 +98,16 @@ async fn start_network() -> Result<(), Box<dyn Error>> {
         .with_swarm_config(|c| c.with_idle_connection_timeout(Duration::from_secs(60)))
         .build();
 
-    //TODO: This should probably be loaded from a config file or something, specific to the game.
     let topic = gossipsub::IdentTopic::new(networker!().network_name.clone());
     swarm.behaviour_mut().gossipsub.subscribe(&topic)?;
 
+    swarm.listen_on("/ip4/0.0.0.0/udp/0/quic-v1".parse()?)?;
+    swarm.listen_on("/ip4/0.0.0.0/tcp/0".parse()?)?;
+
     loop {
         select! {
-            _ = tokio::time::sleep(Duration::from_millis(100)) => {
+            //TODO: Make this less than 1000
+            _ = tokio::time::sleep(Duration::from_millis(1000)) => {
                 let mut nw1 = NETWORKER.lock().unwrap();
                 let nw =nw1.as_mut().unwrap();
                 let mut outbound =nw.outbound.drain();
@@ -119,6 +122,16 @@ async fn start_network() -> Result<(), Box<dyn Error>> {
                     message,
                 })) => {
                     networker!().inbound.enqueue(format!("Message;{};{};{}", peer_id, message_id, String::from_utf8_lossy(&message.data)));
+                }
+                SwarmEvent::Behaviour(MyBehaviorEvent::Mdns(mdns::Event::Discovered(list))) => {
+                    for (peer_id, multiaddr) in list {
+                        networker!().events.enqueue(format!("Discovered;{};{}", peer_id, multiaddr));
+                    }
+                }
+                SwarmEvent::Behaviour(MyBehaviorEvent::Mdns(mdns::Event::Expired(list))) => {
+                    for (peer_id, multiaddr) in list {
+                        networker!().events.enqueue(format!("Expired;{};{}", peer_id, multiaddr));
+                    }
                 }
                 SwarmEvent::ConnectionEstablished { peer_id, connection_id, endpoint, num_established, concurrent_dial_errors, established_in } => {
                     networker!().events.enqueue(format!("ConnectionEstablished;{peer_id};{connection_id};{num_established}"));
@@ -193,8 +206,12 @@ fn init(network_name: String) {
 
     use std::thread;
     thread::spawn(move || {
-        let rt = Runtime::new().unwrap();
-        rt.block_on(start_network()).unwrap();
+        tokio::runtime::Builder::new_multi_thread()
+            .enable_all()
+            .build()
+            .unwrap()
+            .block_on(start_network())
+            .unwrap();
     });
 }
 

@@ -17,5 +17,7 @@ class PlayersList:
 while True:
     for msg in libp2py.get_events():
         print(msg)
+    for msg in libp2py.download_bugger():
+        print(msg)
     libp2py.upload_bugger("test")
-    time.sleep(0.1)
+    time.sleep(0.3)
