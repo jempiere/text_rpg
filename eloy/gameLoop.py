@@ -9,7 +9,7 @@ import esper
 
 class Stage:
     preNetwork = "preNetwork"
-    postNetwork = "preRender"
+    postNetwork = "postNetwork"
     preRender = "preRender"
     postRender = "postRender"
 
@@ -22,6 +22,7 @@ def gameLoop():
     # (our code)
 
     # Pre render
+    esper.dispatch_event("postNetwork")
     esper.dispatch_event("preRender")
 
     # Render
