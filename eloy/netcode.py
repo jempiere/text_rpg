@@ -15,9 +15,13 @@ class PlayersList:
 
 
 while True:
+    print("about to get events")
     for msg in libp2py.get_events():
         print(msg)
+    print("about to get messages")
     for msg in libp2py.get_messages():
         print(msg)
+    print("about to test")
     libp2py.push_message("test")
+    print("about to sleep")
     time.sleep(0.3)
