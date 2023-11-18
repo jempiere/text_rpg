@@ -10,7 +10,6 @@ use std::error::Error;
 use std::hash::{Hash, Hasher};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
-use tokio::runtime::Runtime;
 use tokio::{io, select};
 use tracing_subscriber::EnvFilter;
 
@@ -45,12 +44,11 @@ impl Networker {
         }
     }
 
-    fn download_bugger() -> Vec<String> {
+    fn get_messages() -> Vec<String> {
         networker!().inbound.drain().collect()
     }
-    fn upload_bugger(data: String) {
+    fn push_message(data: String) {
         networker!().outbound.enqueue(data);
-        println!("{}", networker!().outbound.len());
     }
     fn get_events() -> Vec<String> {
         networker!().events.drain().collect()
@@ -122,61 +120,63 @@ async fn start_network() -> Result<(), Box<dyn Error>> {
                     message,
                 })) => {
                     networker!().inbound.enqueue(format!("Message;{};{};{}", peer_id, message_id, String::from_utf8_lossy(&message.data)));
-                }
+                },
                 SwarmEvent::Behaviour(MyBehaviorEvent::Mdns(mdns::Event::Discovered(list))) => {
                     for (peer_id, multiaddr) in list {
                         networker!().events.enqueue(format!("Discovered;{};{}", peer_id, multiaddr));
+                        swarm.behaviour_mut().gossipsub.add_explicit_peer(&peer_id);
                     }
-                }
+                },
                 SwarmEvent::Behaviour(MyBehaviorEvent::Mdns(mdns::Event::Expired(list))) => {
                     for (peer_id, multiaddr) in list {
                         networker!().events.enqueue(format!("Expired;{};{}", peer_id, multiaddr));
+                        swarm.behaviour_mut().gossipsub.remove_explicit_peer(&peer_id);
                     }
-                }
+                },
                 SwarmEvent::ConnectionEstablished { peer_id, connection_id, endpoint, num_established, concurrent_dial_errors, established_in } => {
                     networker!().events.enqueue(format!("ConnectionEstablished;{peer_id};{connection_id};{num_established}"));
-                }
+                },
                 SwarmEvent::ConnectionClosed { peer_id, connection_id, endpoint, num_established, cause } => {
                     networker!().events.enqueue(format!("ConnectionClosed;{peer_id};{connection_id};{num_established}"));
-                }
+                },
                 SwarmEvent::IncomingConnection { connection_id, local_addr, send_back_addr } => {
                     networker!().events.enqueue(format!("IncomingConnection;{connection_id};{local_addr};{send_back_addr}"));
-                }
+                },
                 SwarmEvent::IncomingConnectionError { connection_id, local_addr, send_back_addr, error } => {
                     networker!().events.enqueue(format!("IncomingConnectionError;{connection_id};{local_addr};{send_back_addr};{error}"));
-                }
+                },
                 SwarmEvent::OutgoingConnectionError { connection_id, peer_id, error } => {
                     if peer_id.is_some() {
                         let peer_id = peer_id.unwrap();
                         networker!().events.enqueue(format!("OutgoingConnectionError;{connection_id};{peer_id};{error}"));
                     }
                     networker!().events.enqueue(format!("OutgoingConnectionError;{connection_id};;{error}"));
-                }
+                },
                 SwarmEvent::NewListenAddr { listener_id, address } => {
                     networker!().events.enqueue(format!("NewListenAddr;{address}"));
-                }
+                },
                 SwarmEvent::ExpiredListenAddr { listener_id, address } => {
                     networker!().events.enqueue(format!("ExpiredListenAddr;{address}"));
-                }
+                },
                 SwarmEvent::ListenerClosed { listener_id, addresses, reason } => {
                     networker!().events.enqueue(format!("ListenerClosed"));
                 }
                 SwarmEvent::ListenerError { listener_id, error } => {
                     networker!().events.enqueue(format!("ListenerError;{error}"));
-                }
+                },
                 SwarmEvent::Dialing { peer_id, connection_id } => {
                     networker!().events.enqueue(format!("Dialing;{connection_id}"));
-                }
+                },
                 SwarmEvent::NewExternalAddrCandidate { address } => {
                     networker!().events.enqueue(format!("NewExternalAddrCandidate;{address}"));
-                }
+                },
                 SwarmEvent::ExternalAddrConfirmed { address } => {
                     networker!().events.enqueue(format!("ExternalAddrConfirmed;{address}"));
-                }
+                },
                 SwarmEvent::ExternalAddrExpired { address } => {
                     networker!().events.enqueue(format!("ExternalAddrExpired;{address}"));
-                }
-                _ => {}
+                },
+                _ => {},
 
             }
         }
@@ -184,13 +184,13 @@ async fn start_network() -> Result<(), Box<dyn Error>> {
 }
 
 #[pyfunction]
-fn download_bugger() -> Vec<String> {
-    Networker::download_bugger()
+fn get_messages() -> Vec<String> {
+    Networker::get_messages()
 }
 
 #[pyfunction]
-fn upload_bugger(data: String) {
-    Networker::upload_bugger(data);
+fn push_message(data: String) {
+    Networker::push_message(data);
 }
 
 #[pyfunction]
@@ -219,7 +219,7 @@ fn init(network_name: String) {
 fn libp2py(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(init, m)?)?;
     m.add_function(wrap_pyfunction!(get_events, m)?)?;
-    m.add_function(wrap_pyfunction!(download_bugger, m)?)?;
-    m.add_function(wrap_pyfunction!(upload_bugger, m)?)?;
+    m.add_function(wrap_pyfunction!(get_messages, m)?)?;
+    m.add_function(wrap_pyfunction!(push_message, m)?)?;
     Ok(())
 }
