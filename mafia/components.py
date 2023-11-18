@@ -1,5 +1,5 @@
 from text_rpg import eloy
-from dataclasses import dataclass as component
+from eloy import component
 
 
 # This component should only be implemented once. It should be attached to
@@ -74,10 +74,12 @@ class MorningPhase:  # phase where the narrator explains who died/lived.
 class InputPhase:  # phase where the mafia, detective, and angel give their input.
     inputting: bool = True
 
+
 @component
 class Roster:
     roster: list = []
 
+
 @component
-class RecentDeath: #this saves to the narrator the most recent death. Important for orchestration processes.
+class RecentDeath:  # this saves to the narrator the most recent death. Important for orchestration processes.
     recentDeath: str = ""
