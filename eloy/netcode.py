@@ -20,7 +20,8 @@ def component(cls):
 def sendSerialized():
     entities = esper._entities
     for entity in entities:
-        json = f"{entity};"
+        json = f"{entity};{time.time()}" # use current time as a timestamp
+        # print(json)
         components = entities[entity]
         comma = False
         for component in components:
@@ -36,11 +37,12 @@ def sendSerialized():
 def receiveSerialized():
     for json in libp2py.get_messages():
         data = json.split(";")
-        entity = data[0]
+        entity, uuid = data[0], data[1]
+        # entity = data[0]
         if entity in esper._entities:
             esper.delete_entity(entity)
         esper._entities[entity] = {}
-        components = data[1:]
+        components = data[2:]         # 2 is the header length
         for component in components:
             name, data = component.split(":", 1)
             cls = _classnames[name]
@@ -50,12 +52,14 @@ def receiveSerialized():
 
 def netcodeHandler():
     # for msg in libp2py.get_events():
-    #     print(msg)
-    for msg in libp2py.get_messages():
-        print(msg)
-
+        # print(msg)
+    for m in libp2py.get_messages():
+        print(m)
     time.sleep(0.3)
-
+    # while messages := libp2py.get_messages():
+        # for m in messages:
+            # print(m)
+        # time.sleep(0.3)
 
 @component
 class Test:
@@ -75,3 +79,4 @@ esper.create_entity(Player(name="Eloy", age=18))
 esper.create_entity(Player(name="20", age=30), Test())
 
 sendSerialized()
+netcodeHandler()

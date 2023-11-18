@@ -70,11 +70,11 @@ $b0$f7⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿�
 # import esper
 @dataclass
 class _placeholder:
-    renderables = [Renderable(testme2),Renderable(testme2)]
+    renderables = [Renderable(testme),Renderable(testme2)]
     def get_component(self,*a):
         return [
             Region('NULL',2,-1,(0,0),0),
-            Region('a',23,-1,(0,0),0),
+            Region('a',23,-1,(0,0),1),
             Region('b',21,-1,(25,0),0),
             # Region('b',23,-1,(22,0),1),
         ]
@@ -110,7 +110,7 @@ def renderRegions(screen,debug=True): #a curses.window object
         for text, color in fixed:
             if text == '\n':
                 top += 1
-                screen.addstr(top,left,text,color)
+                screen.addstr(top,left+prev_max,text,color)
                 prev_max = 0
             else:
                 screen.addstr(top,left+prev_max,text,color)
