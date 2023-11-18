@@ -24,7 +24,7 @@ def mafiaLoseCheck():
     # This should be exactly one, created in `main`, unless you game developers
     # have made a mistake.
     # Get the [0] item from the returned list.
-    (ent, mafiaLose) = eloy.get_component(c.MafiaLose)[0]
+    ent, mafiaLose = eloy.get_component(c.MafiaLose)[0]
     # Now, the "game_state" entity will mark that the game is over.
     mafiaLose.mafiaLose = True
 
