@@ -5,7 +5,7 @@ def createPerson(Role = None):
     person = eloy.create_entity()
     if Role != None:
         eloy.add_component(person, Role)
-    eloy.add_component(person, c.isAlive)
+    eloy.add_component(person, c.mafiaLose)
     eloy.add_component(person, c.isSaved)
     return person
 #create a person and make them living

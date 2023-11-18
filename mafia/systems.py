@@ -105,6 +105,11 @@ def changePhase(state):  # increment the phase
         eloy.add_component(state, morningPhase)
 
 
+def nightPhaseOrchestrator():
+    for ent, worldState in eloy.get_component(c.NightPhase):
+
+
+
 def killPlayer(
     player,
 ):  # set a single player's Alive to false, if their Saved is false.
