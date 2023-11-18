@@ -119,7 +119,7 @@ def nightPhaseOrchestrator():
 def inputPhaseOrchestrator():
     for ent, narrator in eloy.get_component(c.Votes): #should run once just to grab the narrator.
         playerRoster = eloy.component_for_entity(world, c.Roster)
-        mafiaVote = getMafiaVotes(narrator, playerRoster.roster)
+        mafiaVote = getMafiaVote(narrator, playerRoster.roster)
         angelVote = getAngelVote(narrator, playerRoster.roster)
         savePlayer(int(angelVote))
         detectiveVote = getDetectiveVote(narrator, playerRoster.roster)
@@ -131,7 +131,7 @@ def inputPhaseOrchestrator():
             angel = eloy.component_for_entity(narrator, c.AngelSaved)
             angel.angelSaved = True
         removeVotes(playerRoster)
-        changePhase(gameState)
+        changePhase(world)
         return
 
 def morningPhaseOrchestrator():
@@ -153,7 +153,7 @@ def votingPhaseOrchestrator():
         playerDeath.recentDeath = mostVotes(narrator)
         killPlayer(int(playerDeath.recentDeath))
         removeVotes(playerRoster)
-        changePhase(gameState)
+        changePhase(world)
 
 def killPlayer(
     player,
@@ -238,7 +238,7 @@ def removeVotes(roster):
     return True
 
 def gameOver():
-    players = eloy.component_for_entity(world, c.Roster).roster
+    roster = eloy.component_for_entity(world, c.Roster).roster
     if mafiaLoseCheck(roster) or mafiaWinCheck(roster):
         game = eloy.component_for_entity(world, c.GameStatus)
         game.gameOver = True
@@ -288,3 +288,9 @@ def getDetectiveVote(
 def resetAngelSaved(narrator):
     angelSaved = eloy.component_for_entity(narrator, c.AngelSaved)
     angelSaved.angelSaved = False
+
+def narratorNightSummarize(narrator, recentDeath):
+    pass
+
+def narratorMorningSummarize(narrator, recentDeath):
+    pass
