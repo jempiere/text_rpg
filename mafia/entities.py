@@ -10,6 +10,7 @@ def createPerson(Role = None):
     return person
 #create a person and make them living
 
+'''
 def createGameState():
     state = eloy.create_entity()
     eloy.add_component(state, c.isEnded) # FIX THIS ASH
@@ -22,4 +23,4 @@ def createNarrator():
     eloy.add_component(narrator, c.responseDict)
 #create the narrator and his dictionary of responses from the players.
 
-
+'''
