@@ -78,3 +78,8 @@ class MorningPhase:  # phase where the narrator explains who died/lived.
 @component
 class InputPhase:  # phase where the mafia, detective, and angel give their input.
     inputting: bool = True
+
+@component
+class Roster:
+    roster: list = []
+
