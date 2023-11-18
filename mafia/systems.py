@@ -13,7 +13,6 @@ def mafiaLoseCheck():
     # Loop over every (entity, MafiaComponent) pair in the game.
     for ent, maf in eloy.get_component(c.Mafia):
         # Retrieve that entity's "Alive" component.
->>>>>>> fadb7aaa88fbb126236d8a1256623b1b38f1499d
         # Note, this will error if the entity doesn't exist
         # or doesn't have an Alive component.
         alive = eloy.component_for_entity(ent, c.Alive)
