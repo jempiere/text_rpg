@@ -66,7 +66,6 @@ def pprint(*a,**kw) -> None:
     output.close()
     return contents
 
-
 def render(screen):
     for region in proxy.get_component(Region):
         renderable = proxy.component_for_entity(region.renderable,Renderable)
@@ -90,30 +89,13 @@ def render(screen):
         window.refresh()
         screen.refresh()
 
-    # screen.refresh()
-        
-
-
-# # def render(screen):
-#     for region in proxy.get_component(Region):
-#         height = region.height if region.height >= 0 else curses.LINES
-#         width  = region.width  if region.width  >= 0 else curses.COLS
-
-#         # window# = curses.newwin(height, width, region.corner[0], region.corner[1])
-#         screen.box()
-
-#         screen.addstr(5,5,f"{height},{width},{region.corner}")
-#         screen.addstr(1,1,region.identifier)
-
-#         renderable = proxy.component_for_entity(region.renderable, Renderable)
-#         screen.addstr(height+region.corner[0], width+region.corner[1],f"{renderable.visual}",curses.color_pair(1))
-#         screen.refresh()
 
 
 def main(screen):
     curses.use_default_colors()
     curses.init_pair(1,curses.COLOR_RED,-1)
 
+    
     
     c_line = 3
 
