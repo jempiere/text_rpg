@@ -78,3 +78,6 @@ class InputPhase:  # phase where the mafia, detective, and angel give their inpu
 class Roster:
     roster: list = []
 
+@component
+class RecentDeath: #this saves to the narrator the most recent death. Important for orchestration processes.
+    recentDeath: str = ""
