@@ -114,7 +114,7 @@ async fn start_network() -> Result<(), Box<dyn Error>> {
     loop {
         select! {
             //TODO: Make this less than 1000
-            _ = tokio::time::sleep(Duration::from_millis(1000)) => {
+            _ = tokio::time::sleep(Duration::from_millis(50)) => {
                 let mut nw1 = NETWORKER.lock().unwrap();
                 let nw = nw1.as_mut().unwrap();
                 let mut outbound = nw.outbound.drain();

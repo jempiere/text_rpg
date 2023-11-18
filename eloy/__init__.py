@@ -1,6 +1,6 @@
 from esper import *
 from gameLoop import Stage
-from netcode import PlayersList
+from netcode import component, Synced
 from rendering import Renderable, createRegion
 
 __all__ = [
@@ -34,5 +34,5 @@ __all__ = [
     # ? gameLoop
     "Stage",
     # ? netcode
-    "PlayerList",
+    "component",
 ]

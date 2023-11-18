@@ -12,6 +12,7 @@ class Rules:
     mafiaCount: int = 0
     detectiveCount: int = 0
 
+
 # This component should only be implemented once. It should be attached to
 # a "game_state" entity or some similar entity which collects the global state
 # information. I created this in `main`.
@@ -84,12 +85,14 @@ class MorningPhase:  # phase where the narrator explains who died/lived.
 class InputPhase:  # phase where the mafia, detective, and angel give their input.
     inputting: bool = True
 
+
 @component
 class Roster:
     roster: list = []
 
+
 @component
-class RecentDeath: #this saves to the narrator the most recent death. Important for orchestration processes.
+class RecentDeath:  # this saves to the narrator the most recent death. Important for orchestration processes.
     recentDeath: str = ""
 
 
